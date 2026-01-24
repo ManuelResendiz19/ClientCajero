@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lista de Cajeros</title>
+</head>
+<body layout:fragment="body">
+    <div class="container mt-5">
+        <h1 class="mb-4">Cajeros Disponibles</h1>
+        
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="cajero : ${cajeros}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Cajero #<span th:text="${cajero.idCajero}">1</span></h5>
+                        <p class="card-text"><strong>Estado:</strong> <span th:text="${cajero.estado}">Activo</span></p>
+                        <p class="card-text"><strong>Ubicación:</strong> <span th:text="${cajero.ubicacion}">Sucursal Central</span></p>
+                        <p class="card-text"><strong>Capacidad Máx:</strong> <span th:text="${cajero.capacidadMax}">100</span> personas</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button class="btn btn-primary btn-sm">Ver Detalles</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+

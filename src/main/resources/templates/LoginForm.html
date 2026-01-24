@@ -1,0 +1,86 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+    
+<body layout:fragment="body" class="bg-light">
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-5" style="width: 100%; max-width: 400px; border-radius: 15px; border: none;">
+        <div class="text-center mb-4">
+            <img src="https://i.pinimg.com/736x/4a/60/9f/4a609ff0c282bb86492cf9038680e0ff.jpg" alt="Banco Logo" style="width: 100px; margin-bottom: 15px;">
+            <h3 class="fw-bold text-primary">Iniciar Sesión</h3>
+            <p class="text-muted">Accede a tu cuenta para operar en cajeros</p>
+        </div>
+
+        <form id="loginForm" th:action="@{/cajero/login}" method="post" th:object="${loginRequest}">
+            <div class="mb-3">
+                <label for="username" class="form-label">Usuario</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-person-fill"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" id="username" name="username" placeholder="Usuario" required th:field="*{username}">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
+                    <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="Contraseña" required th:field="*{password}">
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+            </div>
+        </form>
+
+<!--        <div class="text-center mt-3">
+            <a href="#" class="text-decoration-none text-muted small">¿Olvidaste tu contraseña?</a>
+        </div>-->
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #e0f0ff, #f8f9fa);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+        background-color: #ffffff;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .input-group-text {
+        border-radius: 0.375rem 0 0 0.375rem;
+        border: 1px solid #ced4da;
+        color: #495057;
+    }
+
+    .form-control {
+        border-radius: 0 0.375rem 0.375rem 0;
+    }
+</style>
+
+</body>
+</html>
+
