@@ -1,32 +1,167 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lista de Cajeros</title>
-</head>
-<body layout:fragment="body">
-    <div class="container mt-5">
-        <h1 class="mb-4">Cajeros Disponibles</h1>
-        
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col" th:each="cajero : ${cajeros}">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Cajero #<span th:text="${cajero.idCajero}">1</span></h5>
-                        <p class="card-text"><strong>Estado:</strong> <span th:text="${cajero.estado}">Activo</span></p>
-                        <p class="card-text"><strong>Ubicación:</strong> <span th:text="${cajero.ubicacion}">Sucursal Central</span></p>
-                        <p class="card-text"><strong>Capacidad Máx:</strong> <span th:text="${cajero.capacidadMax}">100</span> personas</p>
-                    </div>
-                    <div class="card-footer text-center">
-                        <button class="btn btn-primary btn-sm">Ver Detalles</button>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Cajeros</title>
+    </head>
+
+    <body layout:fragment="body">
+        <style>
+            @keyframes fadeUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+
+            .page-title {
+                animation: fadeLeft 0.6s ease;
+            }
+
+
+            .cajero-card {
+                opacity: 0;
+                border-radius: 14px;
+                animation: fadeUp 0.6s ease forwards;
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
+            }
+
+            .cajero-card:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+            }
+
+
+            .cajero-card:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+            .cajero-card:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+            .cajero-card:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+            .cajero-card:nth-child(4) {
+                animation-delay: 0.4s;
+            }
+            .cajero-card:nth-child(5) {
+                animation-delay: 0.5s;
+            }
+
+
+            .cajero-card .bi-bank {
+                transition: transform 0.3s ease;
+            }
+
+            .cajero-card:hover .bi-bank {
+                transform: scale(1.1);
+            }
+
+
+            .badge {
+                transition: transform 0.2s ease;
+            }
+
+            .cajero-card:hover .badge {
+                transform: scale(1.05);
+            }
+
+
+            .cajero-card .btn {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .cajero-card .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+            }
+
+        </style>
+        <div class="container mt-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold page-title">
+                    <i class="bi bi-credit-card-2-front me-2"></i>
+                    Cajeros Disponibles
+                </h1>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+
+                <div class="col" th:each="cajero, stat : ${cajeros}">
+                    <div class="card cajero-card h-100 shadow-sm">
+
+                        <div class="card-header text-center bg-dark text-white">
+                            <i class="bi bi-bank fs-1"></i>
+                            <h5 class="mt-2 mb-0">
+                                Cajero #
+                                <span th:text="${cajero.idCajero}"></span>
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <p class="mb-3">
+                                <strong>Estado:</strong>
+                                <span class="badge ms-2"
+                                      th:text="${cajero.estado}"
+                                      th:classappend="
+                                      ${cajero.estado == 'Activo'} ? 'bg-success' :
+                                      (${cajero.estado == 'Mantenimiento'} ? 'bg-warning text-dark' :
+                                      'bg-danger')">
+                                </span>
+                            </p>
+
+                            <p class="mb-3">
+                                <i class="bi bi-geo-alt-fill text-primary me-1"></i>
+                                <strong>Ubicación:</strong><br>
+                                <span th:text="${cajero.ubicacion}"></span>
+                            </p>
+
+                            <p class="mb-0">
+                                <i class="bi bi-cash-stack"></i>
+                                <strong>Capacidad Máx:</strong>
+                                <span th:text="${cajero.capacidadMax}">$</span>
+                            </p>
+
+                        </div>
+
+
+                        <a th:href="@{/cajero/detail/{IdCajero}(IdCajero=${cajero.idCajero})}"
+                           class="btn btn-primary btn-sm mb-1">
+                            <i class="bi bi-eye"></i> Ver detalles
+                        </a>
+
                     </div>
                 </div>
+
+                <div th:if="${#lists.isEmpty(cajeros)}" class="col-12 text-center">
+                    <p class="text-muted mt-5">
+                        <i class="bi bi-info-circle me-1"></i>
+                        No hay cajeros disponibles
+                    </p>
+                </div>
+
             </div>
         </div>
-    </div>
-
-</body>
+        
+    </body>
 </html>
-

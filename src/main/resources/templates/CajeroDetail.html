@@ -1,0 +1,278 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+    <head>
+        <title>Detalle del Cajero</title>
+        <meta charset="UTF-8">
+
+        <style>
+            body {
+                background: linear-gradient(135deg, #1b263b, #415a77);
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                min-height: 100vh;
+                margin: 0;
+                padding-top: 56px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .atm-container {
+                background-color: #2c3e50;
+                border-radius: 20px;
+                padding: 30px 35px;
+                width: 380px;
+                box-shadow:
+                    0 8px 30px rgba(0, 0, 0, 0.6),
+                    inset 0 0 10px #1abc9c;
+                color: #eaeaea;
+                user-select: none;
+            }
+
+
+            .atm-screen {
+                background: linear-gradient(145deg, #f0f4f8, #d9e2ec);
+                border-radius: 15px;
+                padding: 25px 30px;
+                margin-bottom: 30px;
+                min-height: 210px;
+                box-shadow:
+                    inset 4px 4px 8px #bcccdc,
+                    inset -4px -4px 8px #ffffff;
+                font-family: 'Courier New', Courier, monospace;
+                color: #102a43;
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .atm-screen h5 {
+                text-align: center;
+                font-weight: 700;
+                margin-bottom: 20px;
+                letter-spacing: 1.2px;
+                color: #102a43;
+            }
+
+            .atm-screen p {
+                margin-bottom: 14px;
+                font-weight: 600;
+            }
+
+            .atm-screen p span {
+                font-weight: 400;
+                color: #334e68;
+            }
+
+            .atm-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            .atm-buttons button {
+                padding: 14px 0;
+                font-weight: 700;
+                border-radius: 12px;
+                border: none;
+                font-size: 1.1rem;
+                cursor: pointer;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+                transition: background-color 0.25s ease, transform 0.2s ease;
+                color: #fff;
+                user-select: none;
+            }
+            .atm-buttons button:active {
+                transform: scale(0.98);
+            }
+            .atm-input {
+                width: 100%;
+                padding: 10px;
+                border-radius: 8px;
+                border: none;
+                font-size: 1rem;
+                background: #eaeaea;
+                margin-top: 5px;
+            }
+
+            .btn-enter {
+                width: 100%;
+                margin-top: 15px;
+                padding: 12px;
+                border-radius: 10px;
+                border: none;
+                background: #1abc9c;
+                color: #102a43;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .btn-enter:hover {
+                background: #16a085;
+            }
+
+            .atm-keypad {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin-bottom: 25px;
+            }
+
+            .atm-keypad button {
+                padding: 15px;
+                border-radius: 8px;
+                border: none;
+                background: #34495e;
+                color: #fff;
+                font-size: 1.1rem;
+                font-weight: bold;
+                box-shadow: inset -2px -2px 5px rgba(255,255,255,0.1);
+            }
+
+            .atm-keypad .clear {
+                background: #e74c3c;
+            }
+
+            .atm-keypad .ok {
+                background: #27ae60;
+            }
+
+            .atm-buttons {
+                display: none;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+
+            .atm-buttons {
+                display: none;
+            }
+
+            .btn-action {
+                background-color: #27ae60;
+            }
+            .btn-action:hover {
+                background-color: #2ecc71;
+            }
+
+
+            .btn-back {
+                grid-column: 1 / span 2;
+                background-color: #95a5a6;
+                color: #fff;
+                font-weight: 700;
+                border-radius: 12px;
+                padding: 14px 0;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                transition: background-color 0.25s ease;
+            }
+            .btn-back:hover {
+                background-color: #7f8c8d;
+                color: #f0f0f0;
+            }
+
+            .atm-footer {
+                text-align: center;
+                font-size: 0.75rem;
+                color: #a9b8c2;
+                font-style: italic;
+                user-select: none;
+            }
+
+        </style>
+    </head>
+    <body layout:fragment="body">
+
+        <div class="atm-container">
+            <div class="atm-screen">
+                <!--                <h5>Detalle del Cajero</h5>
+                                <p><strong>ID Cajero:</strong> <span th:text="${cajero.idCajero}">1</span></p>
+                                <p><strong>Estado:</strong> <span th:text="${cajero.estado}">Activo</span></p>
+                                <p><strong>Ubicación:</strong> <span th:text="${cajero.ubicacion}">Paseo Reforma 1</span></p>
+                                <p><strong>Capacidad Máxima:</strong> <span th:text="${cajero.capacidadMax}">12550</span></p>-->
+
+                <form th:object="${cuenta}">
+                            <div class="mb-3">
+                                <label>No. Tarjeta</label>
+                                <input type="text"
+                                       id="noTarjeta"
+                                       class="atm-input"
+                                       placeholder="•••• •••• •••• ••••"
+                                       th:field="*{NoTarjeta}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>PIN</label>
+                                <input type="password"
+                                       id="pin"
+                                       class="atm-input"
+                                       placeholder="****"
+                                       th:field="*{PIN}">
+                            </div>
+
+                            <button type="submit" class="btn-enter">
+                                INGRESAR
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="atm-keypad">
+                        <button>1</button><button>2</button><button>3</button>
+                        <button>4</button><button>5</button><button>6</button>
+                        <button>7</button><button>8</button><button>9</button>
+                        <button class="clear">C</button>
+                        <button>0</button>
+                        <button class="ok">OK</button>
+                    </div>
+
+                    
+                    <div class="atm-buttons">
+                        <button class="btn-action">Retirar</button>
+                        <button class="btn-action">Consultar Saldo</button>
+                        <button class="btn-back">Volver</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <script>
+    $(document).ready(function () {
+
+        $('form').on('submit', function (e) {
+            e.preventDefault(); 
+
+            const data = {
+                NoTarjeta: $('#noTarjeta').val(),
+                PIN: $('#pin').val(),
+                IdCajero:  1
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/api/cajero/loginCajero',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log('Respuesta:', response);
+
+                    if (response.correct) {
+                        alert('Login exitoso ✅');
+                        $('.atm-buttons').fadeIn(300);
+                    } else {
+                        alert('Error: ' + response.errorMessage);
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+                    alert('Error de conexión con el servicio');
+                }
+            });
+        });
+
+    });
+</script>
+
+    </body>
+</html>

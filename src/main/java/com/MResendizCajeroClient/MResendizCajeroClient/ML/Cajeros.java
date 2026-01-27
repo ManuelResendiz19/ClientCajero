@@ -1,56 +1,52 @@
 
 package com.MResendizCajeroClient.MResendizCajeroClient.ML;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Cajeros {
-    
-    private int IdCajero;
-    
-    private String Estado;
-    
-    private String Ubicacion;
-    
-    private int CapacidadMax;
 
-    public Cajeros() {
-    }
+    @JsonProperty("IdCajero")
+    private int idCajero;
 
-    public Cajeros(int IdCajero, String Estado, String Ubicacion, int CapacidadMax) {
-        this.IdCajero = IdCajero;
-        this.Estado = Estado;
-        this.Ubicacion = Ubicacion;
-        this.CapacidadMax = CapacidadMax;
-    }
+    @JsonProperty("Estado")
+    private String estado;
+
+    @JsonProperty("Ubicacion")
+    private String ubicacion;
+
+    @JsonProperty("CapacidadMax")
+    private int capacidadMax;
 
     public int getIdCajero() {
-        return IdCajero;
+        return idCajero;
     }
 
-    public void setIdCajero(int IdCajero) {
-        this.IdCajero = IdCajero;
+    public void setIdCajero(int idCajero) {
+        this.idCajero = idCajero;
     }
 
     public String getEstado() {
-        return Estado;
+        return estado;
     }
 
-    public void setEstado(String Estado) {
-        this.Estado = Estado;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public String getUbicacion() {
-        return Ubicacion;
+        return ubicacion;
     }
 
-    public void setUbicacion(String Ubicacion) {
-        this.Ubicacion = Ubicacion;
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public int getCapacidadMax() {
-        return CapacidadMax;
+        return capacidadMax;
     }
 
-    public void setCapacidadMax(int CapacidadMax) {
-        this.CapacidadMax = CapacidadMax;
+    public void setCapacidadMax(int capacidadMax) {
+        this.capacidadMax = capacidadMax;
     }
+    
 }

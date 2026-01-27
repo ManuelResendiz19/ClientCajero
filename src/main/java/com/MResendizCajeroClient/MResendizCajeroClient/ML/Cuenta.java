@@ -17,11 +17,13 @@ public class Cuenta {
     private Usuario usuario;
 
     private EstadoCuenta estado;
+        
+    private String NoTarjeta;
 
     public Cuenta() {
     }
 
-    public Cuenta(int IdCuenta, String NoCuenta, Float Saldo, String PIN, TipoCuenta tipoCuenta, Usuario usuario, EstadoCuenta estado) {
+    public Cuenta(int IdCuenta, String NoCuenta, Float Saldo, String PIN, TipoCuenta tipoCuenta, Usuario usuario, EstadoCuenta estado, String NoTarjeta) {
         this.IdCuenta = IdCuenta;
         this.NoCuenta = NoCuenta;
         this.Saldo = Saldo;
@@ -29,6 +31,7 @@ public class Cuenta {
         this.tipoCuenta = tipoCuenta;
         this.usuario = usuario;
         this.estado = estado;
+        this.NoTarjeta = NoTarjeta;
     }
 
     public String getNoCuenta() {
@@ -86,4 +89,13 @@ public class Cuenta {
     public void setIdCuenta(int IdCuenta) {
         this.IdCuenta = IdCuenta;
     }
+
+    public String getNoTarjeta() {
+        return NoTarjeta;
+    }
+
+    public void setNoTarjeta(String NoTarjeta) {
+        this.NoTarjeta = NoTarjeta;
+    }
+    
 }
