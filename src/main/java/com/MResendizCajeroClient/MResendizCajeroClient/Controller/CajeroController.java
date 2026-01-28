@@ -1,4 +1,3 @@
-
 package com.MResendizCajeroClient.MResendizCajeroClient.Controller;
 
 import com.MResendizCajeroClient.MResendizCajeroClient.DTO.LoginRequest;
@@ -6,6 +5,7 @@ import com.MResendizCajeroClient.MResendizCajeroClient.DTO.LoginResponse;
 import com.MResendizCajeroClient.MResendizCajeroClient.ML.Cajeros;
 import com.MResendizCajeroClient.MResendizCajeroClient.ML.Cuenta;
 import com.MResendizCajeroClient.MResendizCajeroClient.ML.Result;
+import com.MResendizCajeroClient.MResendizCajeroClient.ML.Transacciones;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -26,9 +26,9 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 @RequestMapping("cajero")
 public class CajeroController {
-    
-    private static final  String urlBase = "http://localhost:8080";
-    
+
+    private static final String urlBase = "http://localhost:8080";
+
     @GetMapping
     public String index(Model model, HttpSession session) {
 
@@ -45,12 +45,13 @@ public class CajeroController {
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<Result<List<Cajeros>>> response =
-                restTemplate.exchange(
+        ResponseEntity<Result<List<Cajeros>>> response
+                = restTemplate.exchange(
                         urlBase + "/api/Cajeros",
                         HttpMethod.GET,
                         entity,
-                        new ParameterizedTypeReference<Result<List<Cajeros>>>() {}
+                        new ParameterizedTypeReference<Result<List<Cajeros>>>() {
+                }
                 );
 
         if (response.getStatusCode().is2xxSuccessful()
@@ -64,14 +65,13 @@ public class CajeroController {
 
         return "CajerosIndex";
     }
-    
+
     @GetMapping("/login")
-    public String Login(Model model){
+    public String Login(Model model) {
         model.addAttribute("loginRequest", new LoginRequest());
         return "LoginForm";
     }
-    
-    
+
     @PostMapping("/login")
     public String login(@ModelAttribute LoginRequest loginRequest,
             HttpSession session,
@@ -82,8 +82,8 @@ public class CajeroController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<LoginRequest> request =
-                new HttpEntity<>(loginRequest, headers);
+        HttpEntity<LoginRequest> request
+                = new HttpEntity<>(loginRequest, headers);
 
         ResponseEntity<LoginResponse> response;
 
@@ -107,28 +107,36 @@ public class CajeroController {
 
         session.setAttribute("token", usuario.getToken());
         session.setAttribute("rol", usuario.getRol());
-        
+
         return "redirect:/cajero";
     }
-    
+
     @GetMapping("/detail/{IdCajero}")
-    public String Detail(@PathVariable("IdCajero") int IdCajero, Model model, HttpSession session){
+    public String Detail(@PathVariable("IdCajero") int IdCajero, Model model, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
+
+        Object tokenObj = session.getAttribute("token");
+        if (tokenObj == null) {
+            return "redirect:/login";
+        }
+        String token = tokenObj.toString();
         HttpHeaders header = new HttpHeaders();
-        header.set("Authorization", "Bearer " + session.getAttribute("token").toString());
+        header.set("Authorization", "Bearer " + token);
+
         HttpEntity<String> entity = new HttpEntity<>(null, header);
-        
-        ResponseEntity<Result<Cajeros>>responseEntity = restTemplate.exchange(urlBase + "/api/Cajeros/" + IdCajero, HttpMethod.GET,
-                entity, new ParameterizedTypeReference<Result<Cajeros>>() {});
-        
-        if(responseEntity.getStatusCode().value() == 200){
+
+        ResponseEntity<Result<Cajeros>> responseEntity = restTemplate.exchange(urlBase + "/api/Cajeros/" + IdCajero, HttpMethod.GET,
+                entity, new ParameterizedTypeReference<Result<Cajeros>>() {
+        });
+
+        if (responseEntity.getStatusCode().value() == 200) {
             Result<Cajeros> result = responseEntity.getBody();
             model.addAttribute("cajero", result.object);
         }
-        
+
         model.addAttribute("cuenta", new Cuenta());
+        model.addAttribute("transaccion", new Transacciones());
         
         return "CajeroDetail";
     }
-    
 }

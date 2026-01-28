@@ -2,8 +2,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
     <head>
-        <title>Detalle del Cajero</title>
         <meta charset="UTF-8">
+        <title>ATM</title>
 
         <style>
             body {
@@ -12,6 +12,10 @@
                 min-height: 100vh;
                 margin: 0;
                 padding-top: 56px;
+            }
+
+            .atm-layout {
+                min-height: calc(100vh - 56px);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -19,260 +23,363 @@
 
             .atm-container {
                 background-color: #2c3e50;
-                border-radius: 20px;
-                padding: 30px 35px;
-                width: 380px;
-                box-shadow:
-                    0 8px 30px rgba(0, 0, 0, 0.6),
-                    inset 0 0 10px #1abc9c;
-                color: #eaeaea;
-                user-select: none;
+                width: 400px;
+                border-radius: 22px;
+                padding: 30px;
+                box-shadow: 0 10px 40px rgba(0,0,0,.6),
+                    inset 0 0 12px #1abc9c;
+                animation: fadeScaleIn 0.8s ease-out, glowPulse 3s infinite;
             }
-
 
             .atm-screen {
                 background: linear-gradient(145deg, #f0f4f8, #d9e2ec);
-                border-radius: 15px;
-                padding: 25px 30px;
-                margin-bottom: 30px;
-                min-height: 210px;
-                box-shadow:
-                    inset 4px 4px 8px #bcccdc,
-                    inset -4px -4px 8px #ffffff;
-                font-family: 'Courier New', Courier, monospace;
-                color: #102a43;
-                font-size: 1rem;
-                line-height: 1.5;
-            }
-
-            .atm-screen h5 {
-                text-align: center;
-                font-weight: 700;
+                border-radius: 16px;
+                padding: 25px;
+                min-height: 220px;
                 margin-bottom: 20px;
-                letter-spacing: 1.2px;
-                color: #102a43;
+                animation: screenOn 0.6s ease-in;
             }
 
-            .atm-screen p {
-                margin-bottom: 14px;
-                font-weight: 600;
-            }
-
-            .atm-screen p span {
-                font-weight: 400;
-                color: #334e68;
-            }
-
-            .atm-buttons {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
-
-            .atm-buttons button {
-                padding: 14px 0;
-                font-weight: 700;
-                border-radius: 12px;
-                border: none;
-                font-size: 1.1rem;
-                cursor: pointer;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-                transition: background-color 0.25s ease, transform 0.2s ease;
-                color: #fff;
-                user-select: none;
-            }
-            .atm-buttons button:active {
-                transform: scale(0.98);
-            }
             .atm-input {
                 width: 100%;
                 padding: 10px;
                 border-radius: 8px;
                 border: none;
-                font-size: 1rem;
-                background: #eaeaea;
-                margin-top: 5px;
+                margin-bottom: 15px;
             }
 
             .btn-enter {
                 width: 100%;
-                margin-top: 15px;
                 padding: 12px;
-                border-radius: 10px;
-                border: none;
                 background: #1abc9c;
-                color: #102a43;
+                border: none;
+                border-radius: 10px;
                 font-weight: bold;
                 cursor: pointer;
+                transition: transform .2s, box-shadow .2s;
             }
 
             .btn-enter:hover {
-                background: #16a085;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(0,0,0,.4);
             }
 
+            .atm-buttons {
+                display: none;
+                gap: 15px;
+                margin-top: 15px;
+            }
+
+            .btn-action {
+                flex: 1;
+                padding: 14px 0;
+                background: #27ae60;
+                border: none;
+                border-radius: 12px;
+                font-weight: bold;
+                color: white;
+                cursor: pointer;
+                transition: transform .2s, box-shadow .2s;
+            }
+
+            .btn-action:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(0,0,0,.4);
+            }
+
+            #atmMessage {
+                display: none;
+                margin-bottom: 15px;
+                padding: 12px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-align: center;
+                animation: slideDown .3s ease-out;
+            }
+
+            /* PIN visual */
+            .pin-dots {
+                text-align: center;
+                font-size: 22px;
+                letter-spacing: 6px;
+                margin-bottom: 10px;
+                height: 24px;
+            }
+
+            /* Teclado */
             .atm-keypad {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap: 10px;
-                margin-bottom: 25px;
+                margin-top: 25px;
             }
 
             .atm-keypad button {
-                padding: 15px;
-                border-radius: 8px;
-                border: none;
+                padding: 16px;
                 background: #34495e;
-                color: #fff;
-                font-size: 1.1rem;
+                border: none;
+                border-radius: 10px;
+                color: white;
                 font-weight: bold;
-                box-shadow: inset -2px -2px 5px rgba(255,255,255,0.1);
+                transition: transform .15s, box-shadow .15s;
             }
 
-            .atm-keypad .clear {
+            .atm-keypad button:active {
+                transform: scale(.92);
+                box-shadow: inset 0 0 10px rgba(0,0,0,.5);
+            }
+
+            .clear {
                 background: #e74c3c;
             }
-
-            .atm-keypad .ok {
+            .ok {
                 background: #27ae60;
             }
 
-            .atm-buttons {
-                display: none;
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
+            /* ANIMACIONES */
+            @keyframes fadeScaleIn {
+                from {
+                    opacity: 0;
+                    transform: scale(.85) translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
             }
 
-
-            .atm-buttons {
-                display: none;
+            @keyframes screenOn {
+                from {
+                    opacity: 0;
+                    filter: brightness(.6);
+                }
+                to {
+                    opacity: 1;
+                    filter: brightness(1);
+                }
             }
 
-            .btn-action {
-                background-color: #27ae60;
-            }
-            .btn-action:hover {
-                background-color: #2ecc71;
-            }
-
-
-            .btn-back {
-                grid-column: 1 / span 2;
-                background-color: #95a5a6;
-                color: #fff;
-                font-weight: 700;
-                border-radius: 12px;
-                padding: 14px 0;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                transition: background-color 0.25s ease;
-            }
-            .btn-back:hover {
-                background-color: #7f8c8d;
-                color: #f0f0f0;
+            @keyframes glowPulse {
+                0%,100% {
+                    box-shadow: inset 0 0 12px #1abc9c;
+                }
+                50% {
+                    box-shadow: inset 0 0 22px #1abc9c;
+                }
             }
 
-            .atm-footer {
-                text-align: center;
-                font-size: 0.75rem;
-                color: #a9b8c2;
-                font-style: italic;
-                user-select: none;
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
+            /* ERROR */
+            @keyframes shake {
+                0%,100% {
+                    transform: translateX(0);
+                }
+                20% {
+                    transform: translateX(-6px);
+                }
+                40% {
+                    transform: translateX(6px);
+                }
+                60% {
+                    transform: translateX(-4px);
+                }
+                80% {
+                    transform: translateX(4px);
+                }
+            }
+
+            .error-anim {
+                animation: shake .4s;
+            }
+
+            /* ÉXITO */
+            .success-anim {
+                animation: successGlow .6s;
+            }
+
+            @keyframes successGlow {
+                from {
+                    box-shadow: inset 0 0 10px #2ecc71;
+                }
+                to {
+                    box-shadow: inset 0 0 25px #2ecc71;
+                }
+            }
         </style>
     </head>
+
     <body layout:fragment="body">
 
-        <div class="atm-container">
-            <div class="atm-screen">
-                <!--                <h5>Detalle del Cajero</h5>
-                                <p><strong>ID Cajero:</strong> <span th:text="${cajero.idCajero}">1</span></p>
-                                <p><strong>Estado:</strong> <span th:text="${cajero.estado}">Activo</span></p>
-                                <p><strong>Ubicación:</strong> <span th:text="${cajero.ubicacion}">Paseo Reforma 1</span></p>
-                                <p><strong>Capacidad Máxima:</strong> <span th:text="${cajero.capacidadMax}">12550</span></p>-->
+        <div class="atm-layout">
+            <div class="atm-container" id="atmContainer">
 
-                <form th:object="${cuenta}">
-                            <div class="mb-3">
-                                <label>No. Tarjeta</label>
-                                <input type="text"
-                                       id="noTarjeta"
-                                       class="atm-input"
-                                       placeholder="•••• •••• •••• ••••"
-                                       th:field="*{NoTarjeta}">
-                            </div>
+                <div class="atm-screen">
 
-                            <div class="mb-3">
-                                <label>PIN</label>
-                                <input type="password"
-                                       id="pin"
-                                       class="atm-input"
-                                       placeholder="****"
-                                       th:field="*{PIN}">
-                            </div>
+                    <div id="atmMessage"></div>
 
-                            <button type="submit" class="btn-enter">
-                                INGRESAR
-                            </button>
-                        </form>
-                    </div>
+                    <div class="pin-dots" id="pinDots"></div>
 
-                    <div class="atm-keypad">
-                        <button>1</button><button>2</button><button>3</button>
-                        <button>4</button><button>5</button><button>6</button>
-                        <button>7</button><button>8</button><button>9</button>
-                        <button class="clear">C</button>
-                        <button>0</button>
-                        <button class="ok">OK</button>
-                    </div>
+                    <form id="loginCajero">
+                        <label>No. Tarjeta</label>
+                        <input type="text" id="noTarjeta" class="atm-input">
 
-                    
+                        <label>PIN</label>
+                        <input type="password" id="pin" class="atm-input">
+
+                        <button class="btn-enter">INGRESAR</button>
+                    </form>
+
                     <div class="atm-buttons">
-                        <button class="btn-action">Retirar</button>
+                        <button class="btn-action" id="botonRetirar">Retirar</button>
                         <button class="btn-action">Consultar Saldo</button>
-                        <button class="btn-back">Volver</button>
+                        <button class="btn-action"
+                                th:if="${session.rol == 'ADMIN'}">
+                            Rellenar
+                        </button>
                     </div>
+
+                    <form id="formRetirar" style="display:none;">
+                        <label>Monto a retirar:</label>
+                        <input type="number" step="0.01" id="monto" class="atm-input">
+                        <button class="btn-enter">Confirmar Retiro</button>
+                    </form>
 
                 </div>
 
-
+                <div class="atm-keypad">
+                    <button>1</button><button>2</button><button>3</button>
+                    <button>4</button><button>5</button><button>6</button>
+                    <button>7</button><button>8</button><button>9</button>
+                    <button class="clear">⟲</button>
+                    <button>0</button>
+                    <button class="ok">OK</button>
+                </div>
             </div>
 
-            <script>
-    $(document).ready(function () {
+            <input type="hidden" id="cajeroIdHidden" th:value="${cajero.idCajero}">
+        </div>
 
-        $('form').on('submit', function (e) {
-            e.preventDefault(); 
+        <script>
+            let noTarjetaGlobal = null;
+            function mostrarMensaje(texto, tipo) {
+                const estilos = {
+                    success: {bg: '#2ecc71', color: '#fff'},
+                    error: {bg: '#e74c3c', color: '#fff'},
+                    info: {bg: '#f1c40f', color: '#2c3e50'}
+                };
+                $('#atmMessage')
+                        .css({background: estilos[tipo].bg, color: estilos[tipo].color})
+                        .text(texto)
+                        .fadeIn(200);
+            }
 
-            const data = {
-                NoTarjeta: $('#noTarjeta').val(),
-                PIN: $('#pin').val(),
-                IdCajero:  1
-            };
+            function animarError() {
+                $('#atmContainer').addClass('error-anim');
+                setTimeout(() => $('#atmContainer').removeClass('error-anim'), 400);
+            }
 
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost:8080/api/cajero/loginCajero',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    console.log('Respuesta:', response);
+            function animarExito() {
+                $('#atmContainer').addClass('success-anim');
+                setTimeout(() => $('#atmContainer').removeClass('success-anim'), 600);
+            }
 
-                    if (response.correct) {
-                        alert('Login exitoso ✅');
-                        $('.atm-buttons').fadeIn(300);
-                    } else {
-                        alert('Error: ' + response.errorMessage);
-                    }
-                },
-                error: function (xhr) {
-                    console.error(xhr);
-                    alert('Error de conexión con el servicio');
-                }
+            $(document).ready(function () {
+
+                $('#loginCajero').on('submit', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8080/api/cajero/loginCajero',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            NoTarjeta: $('#noTarjeta').val(),
+                            PIN: $('#pin').val(),
+                            IdCajero: $('#cajeroIdHidden').val()
+                        }),
+                        success: function (response) {
+                            if (response.correct) {
+                                noTarjetaGlobal = $('#noTarjeta').val();
+                                mostrarMensaje('✅ Bienvenido', 'success');
+                                animarExito();
+                                $('#loginCajero').fadeOut(300, () => $('.atm-buttons').fadeIn(300));
+                            } else {
+                                mostrarMensaje(response.errorMessage, 'error');
+                                animarError();
+                            }
+                        },
+                        error: animarError
+                    });
+                });
             });
-        });
 
-    });
-</script>
+            $(document).ready(function () {
 
+                $('#botonRetirar').on('click', function () {
+                    $('.atm-buttons').fadeOut(300, function () {
+                        $('#formRetirar').fadeIn(300);
+                    });
+                });
+
+            });
+
+            function deshabilitarBotones(estado) {
+                $('.btn-action, .btn-enter').prop('disabled', estado);
+            }
+
+            $(document).ready(function () {
+
+                $('#formRetirar').on('submit', function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8080/api/retirar',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            NoTarjeta: noTarjetaGlobal,
+                            Monto: $('#monto').val(),
+                            IdCajero: $('#cajeroIdHidden').val()
+                        }),
+                        beforeSend: function () {
+                            deshabilitarBotones(true);
+                            mostrarMensaje('⏳ Procesando retiro...', 'info');
+                        },
+                        success: function (response) {
+                            deshabilitarBotones(false);
+
+                            if (response.correct) {
+                                mostrarMensaje('💸 ' + response.object, 'success');
+                                $('#monto').val('');
+
+                                setTimeout(() => {
+                                    $('#formRetirar').fadeOut(300);
+                                    $('.atm-buttons').fadeIn(300);
+                                }, 1500);
+
+                            } else {
+                                mostrarMensaje(response.errorMessage, 'error');
+                            }
+                        },
+                        error: function () {
+                            deshabilitarBotones(false);
+                            mostrarMensaje('Error de conexión', 'error');
+                        }
+                    });
+                });
+
+            });
+
+
+        </script>
     </body>
 </html>
