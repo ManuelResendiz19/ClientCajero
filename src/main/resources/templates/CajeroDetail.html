@@ -97,7 +97,6 @@
                 animation: slideDown .3s ease-out;
             }
 
-            /* PIN visual */
             .pin-dots {
                 text-align: center;
                 font-size: 22px;
@@ -106,7 +105,6 @@
                 height: 24px;
             }
 
-            /* Teclado */
             .atm-keypad {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -136,7 +134,6 @@
                 background: #27ae60;
             }
 
-            /* ANIMACIONES */
             @keyframes fadeScaleIn {
                 from {
                     opacity: 0;
@@ -179,7 +176,6 @@
                 }
             }
 
-            /* ERROR */
             @keyframes shake {
                 0%,100% {
                     transform: translateX(0);
@@ -202,7 +198,6 @@
                 animation: shake .4s;
             }
 
-            /* ÉXITO */
             .success-anim {
                 animation: successGlow .6s;
             }
@@ -243,7 +238,7 @@
                         <button class="btn-action" id="botonRetirar">Retirar</button>
                         <button class="btn-action">Consultar Saldo</button>
                         <button class="btn-action"
-                                th:if="${session.rol == 'ADMIN'}">
+                                th:if="${session.rol == 'ADMIN'}" id="botonRellenar">
                             Rellenar
                         </button>
                     </div>
@@ -253,6 +248,22 @@
                         <input type="number" step="0.01" id="monto" class="atm-input">
                         <button class="btn-enter">Confirmar Retiro</button>
                     </form>
+
+                    <form id="formRellenar" th:object="${TDenominacion}" style="display:none;">
+                        <label>Monto a rellenar:</label>
+                        <input type="number" step="1" id="montoRellenar" class="atm-input">
+
+                        <select id="denominacion" th:field="*{idDenominacion}">
+                            <option value="0">Cantidad</option>
+                            <option th:each="denominacion : ${denominaciones}"
+                                    th:value="${denominacion.idDenominacion}"
+                                    th:text="${denominacion.Denominacion}">
+                            </option>
+                        </select>
+
+                        <button type="submit" class="btn-enter">Confirmar Relleno</button>
+                    </form>
+
 
                 </div>
 
@@ -268,6 +279,10 @@
 
             <input type="hidden" id="cajeroIdHidden" th:value="${cajero.idCajero}">
         </div>
+
+        <script th:inline="javascript">
+            const TOKEN = /*[[${token}]]*/ '';
+        </script>
 
         <script>
             let noTarjetaGlobal = null;
@@ -379,6 +394,71 @@
 
             });
 
+            $(document).ready(function () {
+
+                $('#botonRellenar').on('click', function () {
+                    $('.atm-buttons').fadeOut(300, function () {
+                        $('#formRellenar').fadeIn(300);
+                    });
+                });
+
+            });
+
+
+            $(document).ready(function () {
+                
+                $('#formRellenar').on('submit', function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8080/api/rellenar',
+                        contentType: 'application/json',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN
+                        },
+                        data: JSON.stringify({
+                            idCajero: $('#cajeroIdHidden').val(),
+                            idDenom: $('#denominacion').val(),
+                            cantidad: $('#montoRellenar').val()
+                        }),
+                        success: function (response) {
+                            if (response.correct) {
+                                alert('Relleno exitoso');
+                            } else {
+                                alert(response.errorMessage);
+                            }
+                        },
+                        error: function () {
+                            alert('Error al llamar al servicio');
+                        }
+                    });
+                });
+            });
+
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:8080/api/denominaciones',
+                    dataType: 'json',
+                    headers: {
+                        "Authorization": "Bearer " + TOKEN
+                    },
+                    success: function (data) {
+                        $('#denominacion').empty();
+                        $('#denominacion').append("<option value='0'>Cantidad</option>");
+
+                        $.each(data.object, function (i, denominacion) {
+                            $('#denominacion').append(
+                                    "<option value=' " + denominacion.idDenominacion + " '>" + denominacion.Denominacion + "</option>");
+                        });
+                    },
+                    error: function () {
+                        alert("No se pudieron obtener las denominaciones");
+                    }
+                });
+            });
 
         </script>
     </body>
