@@ -438,6 +438,7 @@
 
 
             $(document).ready(function () {
+                console.log(TOKEN);
                 $.ajax({
                     type: 'GET',
                     url: 'http://localhost:8080/api/denominaciones',
@@ -454,7 +455,8 @@
                                     "<option value=' " + denominacion.idDenominacion + " '>" + denominacion.Denominacion + "</option>");
                         });
                     },
-                    error: function () {
+                    error: function (error) {
+                        console.log(error);
                         alert("No se pudieron obtener las denominaciones");
                     }
                 });
